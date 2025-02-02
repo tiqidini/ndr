@@ -58,11 +58,24 @@
         }
 
         .search-wrapper {
+            display: none;
             background: white;
             border-radius: var(--border-radius);
             padding: 1rem;
             margin-bottom: 1.5rem;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .search-box {
@@ -213,6 +226,18 @@
                 font-size: 0.9rem;
             }
         }
+
+        /* Добавляем стили для подсветки */
+        .highlight {
+            background-color: rgba(37, 99, 235, 0.2);
+            padding: 0.1em 0.2em;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        .content-hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -259,6 +284,7 @@
         if (enteredPin === correctPin) {
             document.getElementById('pinForm').style.display = 'none';
             document.getElementById('mainContent').style.display = 'block';
+            document.querySelector('.search-wrapper').style.display = 'block';
             initializeTable();
         } else {
             alert('Невірний PIN-код');
@@ -266,34 +292,60 @@
         }
     }
 
+    function highlightText(text, searchText) {
+        if (!searchText) return text;
+        const parts = text.split(new RegExp(`(${searchText})`, 'gi'));
+        return parts.map(part => 
+            part.toLowerCase() === searchText.toLowerCase() 
+                ? `<span class="highlight">${part}</span>` 
+                : part
+        ).join('');
+    }
+
     function initializeTable() {
         $.getJSON("data.json", function(data) {
             // Сортируем данные по году в убывающем порядке
             data.sort((a, b) => b.year - a.year);
             
-            var recordsHtml = '';
-            data.forEach((record, index) => {
-                recordsHtml += `
-                    <div class="record-wrapper">
-                        <div class="code-badge">${record.code}</div>
-                        <div class="title-cell mb-2">${record.title}</div>
-                        <div>
-                            <span class="badge year-badge me-2">${record.year}</span>
-                            <span class="badge notes-badge">${record.notes}</span>
+            function renderRecords(searchText = '') {
+                var recordsHtml = '';
+                data.forEach((record, index) => {
+                    const highlightedCode = highlightText(record.code, searchText);
+                    const highlightedTitle = highlightText(record.title, searchText);
+                    const highlightedNotes = highlightText(record.notes, searchText);
+                    const highlightedYear = highlightText(record.year.toString(), searchText);
+
+                    const recordHtml = `
+                        <div class="record-wrapper">
+                            <div class="code-badge">${highlightedCode}</div>
+                            <div class="title-cell mb-2">${highlightedTitle}</div>
+                            <div>
+                                <span class="badge year-badge me-2">${highlightedYear}</span>
+                                <span class="badge notes-badge">${highlightedNotes}</span>
+                            </div>
                         </div>
-                    </div>
-                `;
-            });
-            
-            $('#recordsContainer').html(recordsHtml);
+                    `;
+
+                    // Проверяем, содержит ли запись искомый текст
+                    if (!searchText || 
+                        record.code.toLowerCase().includes(searchText.toLowerCase()) ||
+                        record.title.toLowerCase().includes(searchText.toLowerCase()) ||
+                        record.notes.toLowerCase().includes(searchText.toLowerCase()) ||
+                        record.year.toString().includes(searchText)) {
+                        recordsHtml += recordHtml;
+                    }
+                });
+                
+                $('#recordsContainer').html(recordsHtml || '<div class="p-4 text-center text-muted">Нічого не знайдено</div>');
+            }
+
+            // Первоначальный рендер
+            renderRecords();
 
             // Инициализация поиска
-            $('#customSearch').on('keyup', function() {
-                const searchText = $(this).val().toLowerCase();
-                $('.record-wrapper').each(function() {
-                    const recordText = $(this).text().toLowerCase();
-                    $(this).toggle(recordText.includes(searchText));
-                });
+            $('#customSearch').on('input', function() {
+                const searchText = $(this).val().trim();
+                renderRecords(searchText);
             });
         }).fail(function(jqXHR, textStatus, errorThrown) {
             console.error("Помилка завантаження даних:", textStatus, errorThrown);
