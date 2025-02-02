@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Перегляд бази даних NDRS</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <!-- Font Awesome для іконок -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #212529;
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .header-section {
+            background: linear-gradient(135deg, #0d6efd 0%, #0dcaf0 100%);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 1.5rem 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .header-section h1 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .card {
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            border: none;
+        }
+        .table {
+            margin-bottom: 0;
+            font-size: 1.05rem;
+        }
+        .dataTables_wrapper {
+            padding: 1.5rem;
+        }
+        .table thead th {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+        .table tbody tr:hover {
+            background-color: rgba(13, 110, 253, 0.05);
+        }
+        .badge {
+            font-size: 0.9em;
+            padding: 0.5em 1em;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+        }
+        .year-badge {
+            background-color: #0dcaf0;
+        }
+        .notes-badge {
+            background-color: #6c757d;
+        }
+        .pin-form {
+            max-width: 400px;
+            margin: 2rem auto;
+            text-align: center;
+        }
+        .pin-input {
+            font-size: 2rem;
+            letter-spacing: 0.5em;
+            text-align: center;
+            padding: 0.5rem;
+            width: 200px;
+            margin: 1rem auto;
+        }
+        .content-hidden {
+            display: none;
+        }
+        .title-cell {
+            font-weight: 500;
+            color: #1a1a1a;
+            line-height: 1.4;
+        }
+        .search-box {
+            border-radius: 1rem;
+            border: 2px solid #e9ecef;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            width: 100%;
+            transition: all 0.2s;
+        }
+        .search-box:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+    </style>
+</head>
+<body>
+    <div class="header-section">
+        <div class="container">
+            <h1 class="display-4 mb-2">
+                <i class="fas fa-database me-3"></i>База даних NDRS
+            </h1>
+            <p class="lead mb-0">Система управління науково-дослідними роботами</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Форма PIN-кода -->
+        <div class="pin-form" id="pinForm">
+            <h2 class="h3 mb-4">Введіть PIN-код для доступу</h2>
+            <input type="password" class="form-control pin-input" id="pinInput" maxlength="4" placeholder="****">
+            <button class="btn btn-primary btn-lg mt-3" onclick="checkPin()">Увійти</button>
+        </div>
+
+        <!-- Основной контент -->
+        <div class="content-hidden" id="mainContent">
+            <div class="card">
+                <div class="card-body">
+                    <table id="dbTable" class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>№</th>
+                                <th>Код</th>
+                                <th>Назва</th>
+                                <th>Рік</th>
+                                <th>Примітки</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Записи будуть завантажені динамічно -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+    function checkPin() {
+        const correctPin = "1122";
+        const enteredPin = document.getElementById('pinInput').value;
+        
+        if (enteredPin === correctPin) {
+            document.getElementById('pinForm').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            initializeTable();
+        } else {
+            alert('Невірний PIN-код');
+            document.getElementById('pinInput').value = '';
+        }
+    }
+
+    function initializeTable() {
+        $.getJSON("data.json", function(data) {
+            var tableBody = '';
+            $.each(data, function(index, record) {
+                tableBody += '<tr>';
+                tableBody += '<td><strong>' + (index + 1) + '</strong></td>';
+                tableBody += '<td><span class="badge bg-primary">' + record.code + '</span></td>';
+                tableBody += '<td class="title-cell">' + record.title + '</td>';
+                tableBody += '<td><span class="badge year-badge">' + record.year + '</span></td>';
+                tableBody += '<td><span class="badge notes-badge">' + record.notes + '</span></td>';
+                tableBody += '</tr>';
+            });
+            $('#dbTable tbody').html(tableBody);
+            
+            $('#dbTable').DataTable({
+                "language": {
+                    "processing": "Зачекайте...",
+                    "search": "Пошук:",
+                    "lengthMenu": "Показати _MENU_ записів",
+                    "info": "Записи з _START_ по _END_ із _TOTAL_ записів",
+                    "infoEmpty": "Записи з 0 по 0 із 0 записів",
+                    "infoFiltered": "(відфільтровано з _MAX_ записів)",
+                    "loadingRecords": "Завантаження...",
+                    "zeroRecords": "Записи відсутні",
+                    "emptyTable": "У таблиці відсутні дані",
+                    "paginate": {
+                        "first": "Перша",
+                        "previous": "Попередня",
+                        "next": "Наступна",
+                        "last": "Остання"
+                    }
+                },
+                "pageLength": 15,
+                "order": [[0, "asc"]],
+                "responsive": true,
+                "dom": '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+                       '<"row"<"col-sm-12"tr>>' +
+                       '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+                "lengthMenu": [[15, 25, 50, -1], [15, 25, 50, "Всі"]],
+            });
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.error("Помилка завантаження даних:", textStatus, errorThrown);
+            alert("Помилка завантаження даних. Будь ласка, переконайтеся, що ви запустили локальний веб-сервер.");
+        });
+    }
+
+    // Обработка ввода PIN-кода по нажатию Enter
+    document.getElementById('pinInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            checkPin();
+        }
+    });
+    </script>
+</body>
+</html> 
