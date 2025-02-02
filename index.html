@@ -12,151 +12,205 @@
     <!-- Font Awesome для іконок -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #3b82f6;
+            --accent-color: #60a5fa;
+            --background-color: #f8fafc;
+            --text-color: #1e293b;
+            --border-radius: 12px;
+        }
+
         body {
-            background-color: #f8f9fa;
-            color: #212529;
-            font-family: 'Open Sans', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
             line-height: 1.6;
         }
+
         .container {
             max-width: 1200px;
             padding: 0 15px;
         }
+
         .header-section {
-            background: linear-gradient(135deg, #0d6efd 0%, #0dcaf0 100%);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
-            padding: 2rem 0;
-            margin-bottom: 1.5rem;
-            border-radius: 0 0 1rem 1rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.1);
         }
-        @media (max-width: 768px) {
-            .header-section {
-                padding: 1.5rem 0;
-                margin-bottom: 1rem;
-            }
-            .header-section h1 {
-                font-size: 1.8rem !important;
-            }
-            .header-section .lead {
-                font-size: 1rem;
-            }
-            .container {
-                padding: 0 10px;
-            }
-        }
+
         .header-section h1 {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Montserrat', sans-serif;
             font-weight: 700;
             letter-spacing: -0.02em;
         }
+
         .card {
-            border-radius: 1rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            margin-bottom: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             border: none;
+            background: white;
         }
+
+        .search-wrapper {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-box {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            font-size: 1rem;
+            width: 100%;
+            transition: all 0.2s;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="%236B7280" viewBox="0 0 20 20"><path d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/></svg>') no-repeat 10px center;
+            background-size: 20px;
+        }
+
+        .search-box:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            outline: none;
+        }
+
         .table {
             margin-bottom: 0;
+            font-size: 0.95rem;
+        }
+
+        .code-badge {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .year-badge {
+            background-color: var(--accent-color);
+            color: white;
+            font-weight: 500;
+        }
+
+        .notes-badge {
+            background-color: #94a3b8;
+            color: white;
+            font-weight: 500;
+        }
+
+        .title-cell {
+            font-weight: 500;
+            color: var(--text-color);
+            line-height: 1.5;
             font-size: 1rem;
         }
-        @media (max-width: 768px) {
-            .table {
-                font-size: 0.9rem;
-            }
-            .badge {
-                font-size: 0.8em !important;
-                padding: 0.4em 0.8em !important;
-            }
-            .dataTables_wrapper {
-                padding: 0.5rem !important;
-            }
-            .title-cell {
-                max-width: 200px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: normal;
-            }
+
+        .record-wrapper {
+            padding: 1rem 0;
+            border-bottom: 1px solid #e2e8f0;
         }
-        .dataTables_wrapper {
-            padding: 1.5rem;
+
+        .record-wrapper:last-child {
+            border-bottom: none;
         }
-        .table thead th {
-            background-color: #f8f9fa;
-            border-bottom: 2px solid #dee2e6;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 0.05em;
-            white-space: nowrap;
-        }
-        .table tbody tr:hover {
-            background-color: rgba(13, 110, 253, 0.05);
-        }
-        .badge {
-            font-size: 0.9em;
-            padding: 0.5em 1em;
-            font-weight: 600;
-            letter-spacing: 0.03em;
-            white-space: nowrap;
-        }
-        .year-badge {
-            background-color: #0dcaf0;
-        }
-        .notes-badge {
-            background-color: #6c757d;
-        }
+
         .pin-form {
             max-width: 400px;
             margin: 2rem auto;
             text-align: center;
-            padding: 0 15px;
+            padding: 2rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
+
         .pin-input {
             font-size: 2rem;
             letter-spacing: 0.5em;
             text-align: center;
-            padding: 0.5rem;
+            padding: 0.75rem;
             width: 200px;
-            margin: 1rem auto;
-        }
-        @media (max-width: 768px) {
-            .pin-input {
-                width: 180px;
-                font-size: 1.8rem;
-            }
-        }
-        .content-hidden {
-            display: none;
-        }
-        .title-cell {
-            font-weight: 500;
-            color: #1a1a1a;
-            line-height: 1.4;
-        }
-        .search-box {
-            border-radius: 1rem;
-            border: 2px solid #e9ecef;
-            padding: 0.75rem 1rem;
-            font-size: 1rem;
-            width: 100%;
+            margin: 1.5rem auto;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
             transition: all 0.2s;
         }
-        .search-box:focus {
-            border-color: #0d6efd;
-            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+
+        .pin-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            outline: none;
         }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transform: translateY(-1px);
+        }
+
+        .dataTables_wrapper {
+            padding: 1.5rem;
+        }
+
+        .dataTables_length select {
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 0.4rem 2rem 0.4rem 1rem;
+            font-size: 0.95rem;
+        }
+
+        .dataTables_paginate .page-link {
+            border-radius: 6px;
+            margin: 0 2px;
+            border: none;
+            color: var(--text-color);
+        }
+
+        .dataTables_paginate .page-item.active .page-link {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
         @media (max-width: 768px) {
-            .dataTables_length,
-            .dataTables_filter {
-                text-align: left !important;
-                margin-bottom: 1rem;
+            .header-section {
+                padding: 1.5rem 0;
             }
-            .dataTables_filter input {
-                width: 100% !important;
-                margin-left: 0 !important;
+            
+            .header-section h1 {
+                font-size: 1.8rem !important;
+            }
+
+            .title-cell {
+                font-size: 0.9rem;
+            }
+
+            .code-badge {
+                font-size: 0.8rem;
+            }
+
+            .search-box {
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -175,28 +229,18 @@
         <!-- Форма PIN-кода -->
         <div class="pin-form" id="pinForm">
             <h2 class="h3 mb-4">Введіть PIN-код для доступу</h2>
-            <input type="password" class="form-control pin-input" id="pinInput" maxlength="4" placeholder="****">
+            <input type="password" class="pin-input" id="pinInput" maxlength="4" placeholder="****">
             <button class="btn btn-primary btn-lg mt-3" onclick="checkPin()">Увійти</button>
         </div>
 
         <!-- Основной контент -->
         <div class="content-hidden" id="mainContent">
+            <div class="search-wrapper">
+                <input type="text" id="customSearch" class="search-box" placeholder="Пошук за всіма полями...">
+            </div>
             <div class="card">
-                <div class="card-body">
-                    <table id="dbTable" class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th>№</th>
-                                <th>Код</th>
-                                <th>Назва</th>
-                                <th>Рік</th>
-                                <th>Примітки</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Записи будуть завантажені динамічно -->
-                        </tbody>
-                    </table>
+                <div class="card-body" id="recordsContainer">
+                    <!-- Записи будуть завантажені динамічно -->
                 </div>
             </div>
         </div>
@@ -206,11 +250,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap5.min.js"></script>
 
     <script>
     function checkPin() {
@@ -232,49 +271,29 @@
             // Сортируем данные по году в убывающем порядке
             data.sort((a, b) => b.year - a.year);
             
-            var tableBody = '';
-            $.each(data, function(index, record) {
-                tableBody += '<tr>';
-                tableBody += '<td><strong>' + (index + 1) + '</strong></td>';
-                tableBody += '<td><span class="badge bg-primary">' + record.code + '</span></td>';
-                tableBody += '<td class="title-cell">' + record.title + '</td>';
-                tableBody += '<td><span class="badge year-badge">' + record.year + '</span></td>';
-                tableBody += '<td><span class="badge notes-badge">' + record.notes + '</span></td>';
-                tableBody += '</tr>';
+            var recordsHtml = '';
+            data.forEach((record, index) => {
+                recordsHtml += `
+                    <div class="record-wrapper">
+                        <div class="code-badge">${record.code}</div>
+                        <div class="title-cell mb-2">${record.title}</div>
+                        <div>
+                            <span class="badge year-badge me-2">${record.year}</span>
+                            <span class="badge notes-badge">${record.notes}</span>
+                        </div>
+                    </div>
+                `;
             });
-            $('#dbTable tbody').html(tableBody);
             
-            $('#dbTable').DataTable({
-                "language": {
-                    "processing": "Зачекайте...",
-                    "search": "Пошук:",
-                    "lengthMenu": "Показати _MENU_ записів",
-                    "info": "Записи з _START_ по _END_ із _TOTAL_ записів",
-                    "infoEmpty": "Записи з 0 по 0 із 0 записів",
-                    "infoFiltered": "(відфільтровано з _MAX_ записів)",
-                    "loadingRecords": "Завантаження...",
-                    "zeroRecords": "Записи відсутні",
-                    "emptyTable": "У таблиці відсутні дані",
-                    "paginate": {
-                        "first": "Перша",
-                        "previous": "Попередня",
-                        "next": "Наступна",
-                        "last": "Остання"
-                    }
-                },
-                "pageLength": 15,
-                "order": [[3, "desc"], [0, "asc"]], // Сортировка по году (убывание), затем по номеру
-                "responsive": true,
-                "dom": '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
-                       '<"row"<"col-sm-12"tr>>' +
-                       '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
-                "lengthMenu": [[15, 25, 50, -1], [15, 25, 50, "Всі"]],
-                "columnDefs": [
-                    { "orderable": false, "targets": [1, 4] }, // Отключаем сортировку для колонок Код и Примітки
-                    { "responsivePriority": 1, "targets": [0, 2, 3] }, // Приоритет отображения колонок на мобильных
-                    { "responsivePriority": 2, "targets": 1 },
-                    { "responsivePriority": 3, "targets": 4 }
-                ]
+            $('#recordsContainer').html(recordsHtml);
+
+            // Инициализация поиска
+            $('#customSearch').on('keyup', function() {
+                const searchText = $(this).val().toLowerCase();
+                $('.record-wrapper').each(function() {
+                    const recordText = $(this).text().toLowerCase();
+                    $(this).toggle(recordText.includes(searchText));
+                });
             });
         }).fail(function(jqXHR, textStatus, errorThrown) {
             console.error("Помилка завантаження даних:", textStatus, errorThrown);
